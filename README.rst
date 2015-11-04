@@ -1,5 +1,5 @@
-### Status
-[![Build Status](https://travis-ci.org/imitrichev/cantera.svg?branch=stdcxx00)](https://travis-ci.org/imitrichev/cantera)
+.. image:: https://travis-ci.org/imitrichev/cantera.svg?branch=stdcxx00
+    :target: https://travis-ci.org/imitrichev/cantera
 
 *******
 CANTERA
