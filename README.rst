@@ -1,9 +1,11 @@
+### Status
+[![Build Status](https://travis-ci.org/imitrichev/cantera.svg?branch=stdcxx00)](https://travis-ci.org/imitrichev/cantera)
 
 *******
 CANTERA
 *******
 
-Version 2.3.0a (dev) - std-c++0x (without c++11 support). Using Boost for thread_safe mode.
+Version 2.2.1b2 (dev) - std-c++0x (without c++11 support). Using Boost for thread_safe mode.
 For old machines without C++11 support.
 Also suits for linkage with apps/libraries precompiled without C++11 support.
 Provided for maintenance.
