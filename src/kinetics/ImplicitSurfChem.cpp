@@ -111,6 +111,12 @@ void ImplicitSurfChem::getState(doublereal* c)
     }
 }
 
+void ImplicitSurfChem::setTolerances(doublereal _atol, doublereal _rtol)
+{
+    m_atol=_atol;
+    m_rtol=_rtol;
+}
+
 void ImplicitSurfChem::initialize(doublereal t0)
 {
     m_integ->setTolerances(m_rtol, m_atol);
@@ -199,9 +205,6 @@ void ImplicitSurfChem::solvePseudoSteadyStateProblem(int ifuncOverride,
         setCommonState_TP(TKelvin, PGas);
     }
 
-    doublereal reltol = 1.0E-6;
-    doublereal atol = 1.0E-20;
-
     // Install a filter for negative concentrations. One of the few ways solveSS
     // can fail is if concentrations on input are below zero.
     bool rset = false;
@@ -221,14 +224,14 @@ void ImplicitSurfChem::solvePseudoSteadyStateProblem(int ifuncOverride,
     m_concSpeciesSave = m_concSpecies;
 
     int retn = m_surfSolver->solveSurfProb(ifunc, time_scale, TKelvin, PGas,
-                                           reltol, atol);
+                                           m_rtol, m_atol);
     if (retn != 1) {
         // reset the concentrations
         m_concSpecies = m_concSpeciesSave;
         setConcSpecies(m_concSpeciesSave.data());
         ifunc = SFLUX_INITIALIZE;
         retn = m_surfSolver->solveSurfProb(ifunc, time_scale, TKelvin, PGas,
-                                           reltol, atol);
+                                           m_rtol, m_atol);
         if (retn != 1) {
             throw CanteraError("ImplicitSurfChem::solvePseudoSteadyStateProblem",
                                "solveSP return an error condition!");

@@ -31,7 +31,9 @@ InterfaceKinetics::InterfaceKinetics(thermo_t* thermo) :
     m_has_electrochem_rxns(false),
     m_has_exchange_current_density_formulation(false),
     m_phaseExistsCheck(false),
-    m_ioFlag(0)
+    m_ioFlag(0),
+    m_atol(1.e-14), // As the default values for ImplicitSurfChem
+    m_rtol(1.e-7)
 {
     if (thermo != 0) {
         addPhase(*thermo);
@@ -97,6 +99,8 @@ InterfaceKinetics& InterfaceKinetics::operator=(const InterfaceKinetics& right)
     m_rxnPhaseIsReactant = right.m_rxnPhaseIsReactant;
     m_rxnPhaseIsProduct = right.m_rxnPhaseIsProduct;
     m_ioFlag = right.m_ioFlag;
+    m_atol = right.m_atol;
+    m_rtol = right.m_rtol;
 
     return *this;
 }
@@ -883,6 +887,7 @@ void InterfaceKinetics::advanceCoverages(doublereal tstep)
         vector<InterfaceKinetics*> k;
         k.push_back(this);
         m_integrator = new ImplicitSurfChem(k);
+        m_integrator->setTolerances(m_atol,m_rtol);
         m_integrator->initialize();
     }
     m_integrator->integrate(0.0, tstep);
@@ -898,11 +903,18 @@ void InterfaceKinetics::solvePseudoSteadyStateProblem(
         vector<InterfaceKinetics*> k;
         k.push_back(this);
         m_integrator = new ImplicitSurfChem(k);
+        m_integrator->setTolerances(m_atol,m_rtol);
         m_integrator->initialize();
     }
     m_integrator->setIOFlag(m_ioFlag);
     // New direct method to go here
     m_integrator->solvePseudoSteadyStateProblem(ifuncOverride, timeScaleOverride);
+}
+
+void InterfaceKinetics::setTolerances(doublereal _atol, doublereal _rtol)
+{
+   m_atol=_atol;
+   m_rtol=_rtol;
 }
 
 void InterfaceKinetics::setPhaseExistence(const size_t iphase, const int exists)

@@ -65,6 +65,11 @@ public:
     virtual ~ImplicitSurfChem() {};
 
     /*!
+     * Set integrator tolerances instead of default ones
+     */
+    void setTolerances(doublereal _atol, doublereal _rtol);
+
+    /*!
      *  Must be called before calling method 'advance'
      */
     virtual void initialize(doublereal t0 = 0.0);

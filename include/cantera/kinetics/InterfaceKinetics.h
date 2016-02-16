@@ -236,6 +236,8 @@ public:
     /*!
      * This method carries out a time-accurate advancement of the
      * surface coverages for a specified amount of time.
+     * 
+     * CVodesIntegrator class is used to carry out calculations.
      *
      *  \f[
      *    \dot {\theta}_k = \dot s_k (\sigma_k / s_0)
@@ -250,7 +252,7 @@ public:
      * This is the same thing as the advanceCoverages() function,
      * but at infinite times.
      *
-     * Note, a direct solve is carried out under the hood here,
+     * Note, a direct solve with solveSP is carried out under the hood here,
      * to reduce the computational time.
      *
      * @param ifuncOverride One of the values defined in @ref solvesp_methods.
@@ -265,6 +267,16 @@ public:
      */
     void solvePseudoSteadyStateProblem(int ifuncOverride = -1,
                                        doublereal timeScaleOverride = 1.0);
+
+    //! Set integrator tolerances
+    /*!
+     * Set the tolerance used both by advanceCoverages() and
+     * solvePseudoSteadyStateProblem() methods.
+     *
+     * @param _atol The absolute tolerance for the integrator
+     * @param _rtol The relative tolerance for the integrator
+     */
+    void setTolerances(doublereal _atol, doublereal _rtol);
 
     void setIOFlag(int ioFlag);
 
@@ -674,6 +686,9 @@ protected:
     void applyStickingCorrection(double* kf);
 
     int m_ioFlag;
+
+    //! Integrator tolerances
+    doublereal m_atol, m_rtol;
 };
 }
 
